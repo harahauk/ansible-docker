@@ -1,0 +1,18 @@
+---
+# defaults file for docker
+
+# Should be overrridden
+docker_user: "{{ ansible_user_id }}"
+docker_datadir : "docker-data"
+
+docker:
+  packages:
+    - "docker-ce"
+    - "docker-ce-cli"
+    - "containerd.io"
+    - "python3-docker"
+    - "docker-compose-plugin"
+
+  service:
+    name: "docker"
+    subnet: "10.10.0.0/16" # By default this conflicts with the company
