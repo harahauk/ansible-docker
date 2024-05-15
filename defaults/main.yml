@@ -15,4 +15,4 @@ docker:
 
   service:
     name: "docker"
-    subnet: "10.10.0.0/16" # By default this conflicts with the company
+    subnet: "10.10.11.0/24" # By default this conflicts with the company
