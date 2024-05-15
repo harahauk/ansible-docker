@@ -62,6 +62,6 @@ License
 
 MIT License
 
-See [COPYING](./COPYING) for the full text.
+See [LICENCE](./LICENCE) for the full text.
 
 
