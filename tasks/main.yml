@@ -1,0 +1,89 @@
+---
+# tasks file for docker
+
+## Repo setups
+#
+- name: "Add docker-CE repo for RHEL-based OS"
+  become: yes
+  yum_repository:
+    #TODO: Maybe download "https://download.docker.com/linux/centos/docker-ce.repo"
+    #baseurl: "https://download.docker.com/linux/centos/$releasever/$basearch/stable"
+    baseurl: "https://download.docker.com/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable"
+    enabled: yes
+    description: "Docker CE stable (from ansible)"
+    gpgcheck: yes
+    file: "docker-ce"
+    name: "docker-ce-stable"
+    gpgkey: "https://download.docker.com/linux/centos/gpg"
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+
+- name: "Add Docker GPG key in Debian keychain"
+  apt_key:
+    url: "https://download.docker.com/linux/debian/gpg"
+    state: present
+  become: True
+  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+
+- name: "Add docker-CE repo for Debian-based OS"
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
+    state: present
+  become: True
+  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+
+# Remove this if issues with podman
+# dnf remove @container-tools
+- name: "Make sure podman is not installed"
+  when: False # Pending debug
+  package:
+      name: "@container-tools"
+      state: "absent"
+  become: True
+  ignore_errors: True
+
+- name: "Make sure podman is not installed to interfere with docker"
+  become: yes
+  package:
+    name: "podman,podman-compose,containers-common" #TODO: removed @container-tools, does not exist?
+    state: "absent"
+
+- name: "Install packages."
+  yum:
+      name: "{{ docker.packages }}"
+      state: "present"
+      update_cache: True
+  become: True
+
+- name: "Render the daemon config-file"
+  template:
+    src: "daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+  become: True
+  notify: "Restart docker"
+
+- name: "Add the current user to the docker group"
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: "docker"
+    append: True
+  become: True
+
+- name: "Create a docker data directory in the current users home"
+  file:
+    path: "/home/{{ ansible_user_id }}/docker-data"
+    state: directory
+  become: True
+  become_user: "{{ ansible_user_id }}"
+
+- name: "Enable the docker service"
+  service:
+      name: "{{ docker.service.name }}"
+      enabled: True
+      state: "started"
+  become: True
+- name: "Enable the docker service"
+  service:
+      name: "{{ docker.service.name }}"
+      enabled: True
+      state: "started"
+  become: True
