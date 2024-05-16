@@ -21,14 +21,14 @@
   apt_key:
     url: "https://download.docker.com/linux/debian/gpg"
     state: present
-  become: True
+  become: yes
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 - name: "Add docker-CE repo for Debian-based OS"
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_lsb.codename }} stable"
     state: present
-  become: True
+  become: yes
   when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
 
 # Remove this if issues with podman
@@ -38,7 +38,7 @@
   package:
       name: "@container-tools"
       state: "absent"
-  become: True
+  become: yes
   ignore_errors: True
 
 - name: "Make sure podman is not installed to interfere with docker"
@@ -52,13 +52,13 @@
       name: "{{ docker.packages }}"
       state: "present"
       update_cache: True
-  become: True
+  become: yes
 
 - name: "Render the daemon config-file"
   template:
     src: "daemon.json.j2"
     dest: "/etc/docker/daemon.json"
-  become: True
+  become: yes
   notify: "Restart docker"
 
 - name: "Add the current user to the docker group"
@@ -66,13 +66,13 @@
     name: "{{ ansible_user_id }}"
     groups: "docker"
     append: True
-  become: True
+  become: yes
 
 - name: "Create a docker data directory in the current users home"
   file:
     path: "/home/{{ ansible_user_id }}/docker-data"
     state: directory
-  become: True
+  become: yes
   become_user: "{{ ansible_user_id }}"
 
 - name: "Enable the docker service"
@@ -80,10 +80,10 @@
       name: "{{ docker.service.name }}"
       enabled: True
       state: "started"
-  become: True
+  become: yes
 - name: "Enable the docker service"
   service:
       name: "{{ docker.service.name }}"
       enabled: True
       state: "started"
-  become: True
+  become: yes

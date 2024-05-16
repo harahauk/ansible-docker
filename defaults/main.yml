@@ -1,7 +1,7 @@
 ---
 # defaults file for docker
 
-# Should be overrridden
+# Should be overridden
 docker_user: "{{ ansible_user_id }}"
 docker_datadir : "docker-data"
 
@@ -15,4 +15,6 @@ docker:
 
   service:
     name: "docker"
-    subnet: "10.10.11.0/24" # By default this conflicts with the company
+    subnet:
+      cidr: "10.10.11.0/24" # Reservation of subnet
+      size: 28 # Size per network, 28 means 16 hosts.
