@@ -5,7 +5,7 @@ ansible-docker
 @ Staging
 ```
 
-An [Ansible](https://www.ansible.com/)-role which install and configures `docker` and `docker-compose` on the target
+An [Ansible](https://www.ansible.com/)-role which installs and configures `docker` and `docker-compose` on the target
 host.
 
 
@@ -21,13 +21,13 @@ You need ansible [optional install script](./install_ansible.sh), and the module
 This role comes with a [script](./install_ansible.sh) that might or might not setup Ansible correctly for you depending
 on your environment.
 
-On most systems these commands will do the same as the install-script:
+On most systems these commands will do the same as the installation-script:
 ```
 dnf install ansible-core
 ansible-galaxy collection install community.general
 ansible-galaxy collection install community.docker
 ```
-Note: Replace `dnf` with your package manager like `apt` for Ubuntu/Debian-based OS.
+**Note**: Replace `dnf` with your package manager like `apt` for Ubuntu/Debian-based OS.
 
 Role Variables
 --------------
