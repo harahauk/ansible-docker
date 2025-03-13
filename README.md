@@ -17,16 +17,16 @@ Currently supports following distributions
 - RHEL-based (RockyLinux, AlmaLinux)
 - Debian-based (Kali, Debian, Ubuntu)
 
-You need ansible [install-script](./install_ansible.sh), and the module "community general" (which often is pre-installed with your ansible-distribution) and the "community docker" module.
+You need ansible [optional install script](./install_ansible.sh), and the module "community general" (which often is pre-installed with your ansible-distribution) and the "community docker" module.
 This role comes with a [script](./install_ansible.sh) that might or might not setup Ansible correctly for you depending
 on your environment.
 
-On most systems this will do the same:
+On most systems these commands will do the same as the install-script:  
 ´´´
 dnf install ansible-core
 ansible-galaxy collection install community.general
 ansible-galaxy collection install community.docker
-´´´
+´´´  
 Note: Replace `dnf` with your package manager like `apt` for Ubuntu/Debian-based OS.
 
 Role Variables
