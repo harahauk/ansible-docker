@@ -2,7 +2,8 @@
 # defaults file for docker
 
 # Should be overrridden
-docker_user: "{{ ansible_user_id }}"
+#docker_user: "{{ ansible_user_id }}"
+docker_user: "dockeruser"
 docker_datadir : "docker-data"
 
 docker:
@@ -15,4 +16,13 @@ docker:
 
   service:
     name: "docker"
-    subnet: "10.10.11.0/24" # By default this conflicts with the company
+    #TODO: Currently not implemented, pending testing in containers
+    #subnet: "10.10.11.0/24" # Chose something that does not conflict with your existing networks
+
+      #\\ {
+      #\\   "default-address-pools":
+      #\\   [
+      #\\     { "base":"{TODO{ docker.service.subnet }TODO}","size":{TODO{ docker.service.subnet.split('/')[1] }TODO} }
+      #\\   ]
+      #\\ }
+
