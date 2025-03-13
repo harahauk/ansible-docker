@@ -2,10 +2,11 @@ ansible-docker
 ==============
 ```diff
 # Project maturity (- Dev|@ Staging|+ Prod):
-- Dev
+@ Staging
 ```
 
-An [Ansible](https://www.ansible.com/)-role which creates a docker-host with traditional and docker-compose support.
+An [Ansible](https://www.ansible.com/)-role which install and configures `docker` and `docker-compose` on the target
+host.
 
 
 Requirements
@@ -16,8 +17,10 @@ Currently supports following distributions
 - RHEL-based (RockyLinux, AlmaLinux)
 - Debian-based (Kali, Debian, Ubuntu)
 
-You need ansible [installed](./install_ansible.sh), the "community general" modules which might or migh not be preinstalled with your ansible-distribution and the "community docker" modules.
-This role comes with a [script](./install) that might or might not setup Ansible correctly for you.
+You need ansible [install-script](./install_ansible.sh), and the module "community general" (which often is pre-installed with your ansible-distribution) and the "community docker" module.
+This role comes with a [script](./install_ansible.sh) that might or might not setup Ansible correctly for you depending
+on your environment.
+
 On most systems this will do the same:
 ´´´
 dnf install ansible-core
@@ -30,11 +33,8 @@ Role Variables
 --------------
 | Variable    | Mandatory | Description |
 | ----------- | --------- | ----------- |
-| docker_user | no        | Defines a user that you want to given access to docker, defaults to the user running the
-playbook if not set |
-
-TODO:
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| docker_user | no        | Defines a user that you want to given access to docker, defaults to the user running the playbook if not set |
+| docker.service.subnet | no | Allows you to override network-segments docker should use |
 
 Dependencies
 ------------
@@ -51,7 +51,9 @@ Example Playbook
 
     - hosts: docker_hosts
       roles:
-         - ansible-docker    #Change to the folder you checked this role out as
+      - ansible-docker    # Change to the folder you checked this role out as
+      vars:
+        docker_user: "my_unprivileged_user"
 
 Author Information
 ------------------
@@ -64,5 +66,3 @@ License
 MIT License
 
 See [LICENSE](./LICENSE) for the full text.
-
-
