@@ -15,7 +15,7 @@ docker:
   service:
     name: "docker"
     subnet:
-      default-bridge: "192.168.250.1/24" # bip
+      default_bridge: "192.168.250.1/24" # bip
       cidr: "192.168.251.0/24" # Reservation of user subnets
       size: 28 # Size per network, 28 means 16 hosts.
       # Only one user-defined network is defined, but can be expanded

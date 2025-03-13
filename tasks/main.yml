@@ -63,17 +63,17 @@
 
 - name: "Add the current user to the docker group"
   user:
-    name: "{{ ansible_user_id }}"
+    name: "{{ docker_user }}"
     groups: "docker"
     append: True
   become: yes
 
 - name: "Create a docker data directory in the current users home"
   file:
-    path: "/home/{{ ansible_user_id }}/docker-data"
+    path: "/home/{{ docker_user }}/docker-data"
     state: directory
   become: yes
-  become_user: "{{ ansible_user_id }}"
+  become_user: "{{ docker_user }}"
 
 - name: "Enable the docker service"
   service:
