@@ -12,19 +12,10 @@ docker:
     - "containerd.io"
     - "python3-docker"
     - "docker-compose-plugin"
-
   service:
     name: "docker"
     subnet:
-      cidr: "10.10.11.0/24" # Reservation of subnet
+      default-bridge: "192.168.250.1/24" # bip
+      cidr: "192.168.251.0/24" # Reservation of user subnets
       size: 28 # Size per network, 28 means 16 hosts.
-    #TODO: Currently not implemented, pending testing in containers
-    #subnet: "10.10.11.0/24" # Chose something that does not conflict with your existing networks
-
-      #\\ {
-      #\\   "default-address-pools":
-      #\\   [
-      #\\     { "base":"{TODO{ docker.service.subnet }TODO}","size":{TODO{ docker.service.subnet.split('/')[1] }TODO} }
-      #\\   ]
-      #\\ }
-
+      # Only one user-defined network is defined, but can be expanded
