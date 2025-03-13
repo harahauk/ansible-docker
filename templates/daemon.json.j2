@@ -1,6 +1,9 @@
 {
-  "default-address-pools":
-  [
-    { "base":"{{ docker.service.subnet.cidr }}","size":{{ docker.service.subnet.size }} }
-  ]
+    "bip": "{{ docker.service.subnet.default-bridge }}",
+    "default-address-pools": [
+        {
+            "base":"{{ docker.service.subnet.cidr }}",
+            "size":"{{ docker.service.subnet.size }}"
+        }
+    ]
 }
