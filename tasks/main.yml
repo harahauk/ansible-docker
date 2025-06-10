@@ -2,7 +2,6 @@
 # tasks file for docker
 
 ## Repo setups
-#
 - name: "Add docker-CE repo for RHEL-based OS"
   become: yes
   yum_repository:
@@ -22,24 +21,38 @@
     url: "https://download.docker.com/linux/debian/gpg"
     state: present
   become: yes
-  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+  when: "ansible_distribution == 'Debian'"
+
+- name: "Add Docker GPG key in Ubuntu keychain"
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+  become: yes
+  when: "ansible_distribution == 'Ubuntu'"
 
 - name: "Add docker-CE repo for Debian-based OS"
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_lsb.codename }} stable"
     state: present
   become: yes
-  when: "(ansible_os_family == 'Debian') or (ansible_os_family == 'Ubuntu')"
+  when: "ansible_distribution == 'Debian'"
+
+- name: "Add docker-CE repo for Ubuntu-based OS"
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+    state: present
+  become: yes
+  when: "ansible_distribution == 'Ubuntu'"
 
 # Remove this if issues with podman
 # dnf remove @container-tools
 - name: "Make sure podman is not installed"
-  when: False # Pending debug
+  when: no # Pending debug
   package:
-      name: "@container-tools"
-      state: "absent"
+    name: "@container-tools"
+    state: "absent"
   become: yes
-  ignore_errors: True
+  ignore_errors: yes
 
 - name: "Make sure podman is not installed to interfere with docker"
   become: yes
@@ -61,14 +74,14 @@
   become: yes
   notify: "Restart docker"
 
-- name: "Add the current user to the docker group"
+- name: "Add user {{ docker_user }} to the docker-group"
   user:
     name: "{{ docker_user }}"
     groups: "docker"
-    append: True
+    append: yes
   become: yes
 
-- name: "Create a docker data directory in the current users home"
+- name: "Create a docker data-directory in {{ docker_user }} home-directory"
   file:
     path: "/home/{{ docker_user }}/docker-data"
     state: directory
@@ -77,13 +90,14 @@
 
 - name: "Enable the docker service"
   service:
-      name: "{{ docker.service.name }}"
-      enabled: True
-      state: "started"
+    name: "{{ docker.service.name }}"
+    enabled: yes
+    state: "started"
   become: yes
+
 - name: "Enable the docker service"
   service:
-      name: "{{ docker.service.name }}"
-      enabled: True
-      state: "started"
+    name: "{{ docker.service.name }}"
+    enabled: yes
+    state: "started"
   become: yes
