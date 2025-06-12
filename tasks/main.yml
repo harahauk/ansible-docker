@@ -19,7 +19,7 @@
 - name: "Install EPEL for RHEL-based operating systems"
   become: yes
   package:
-    name: "epel-relase"
+    name: "epel-release"
     state: "present"
     update_cache: yes
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
