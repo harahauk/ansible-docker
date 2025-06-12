@@ -16,6 +16,21 @@
     gpgkey: "https://download.docker.com/linux/centos/gpg"
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
+- name: "Install EPEL for RHEL-based operating systems"
+  become: yes
+  package:
+    name: "epel-relase"
+    state: "present"
+    update_cache: yes
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+
+- name: "Enable CRB-repository for RHEL-based operating systems"
+  become: yes
+  shell:
+    cmd: "/usr/bin/crb enable"
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  #TODO: When not crb in stat.somefile
+
 - name: "Add Docker GPG key in Debian keychain"
   apt_key:
     url: "https://download.docker.com/linux/debian/gpg"

@@ -7,11 +7,11 @@ docker_datadir : "docker-data"
 
 docker:
   packages:
-    - "docker-ce"
-    - "docker-ce-cli"
-    - "containerd.io"
-    - "python3-docker"
-    - "docker-compose-plugin"
+  - "docker-ce"
+  - "docker-ce-cli"
+  - "containerd.io"
+  - "python3-docker"
+  - "docker-compose-plugin"
   service:
     name: "docker"
     subnet:
