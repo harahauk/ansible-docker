@@ -92,16 +92,18 @@
 - name: "Add user {{ docker_user }} to the docker-group"
   user:
     name: "{{ docker_user }}"
+    create_home: yes
     groups: "docker"
     append: yes
   become: yes
 
-- name: "Create a docker data-directory in {{ docker_user }} home-directory"
+- name: "Create a docker data-directory in '{{ docker_user }}'s home-directory"
   file:
     path: "/home/{{ docker_user }}/docker-data"
     state: directory
+    owner: "{{ docker_user }}"
+    mode: "0755"
   become: yes
-  become_user: "{{ docker_user }}"
 
 - name: "Enable the docker service"
   service:

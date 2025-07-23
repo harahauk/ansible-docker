@@ -12,6 +12,7 @@ docker:
   - "containerd.io"
   - "python3-docker"
   - "docker-compose-plugin"
+  - "acl" # Needed by ansible
   service:
     name: "docker"
     subnet:
