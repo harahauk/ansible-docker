@@ -35,6 +35,7 @@ Role Variables
 | ----------- | --------- | ----------- |
 | docker_user | no        | Defines a user that you want to given access to docker, defaults to the user running the playbook if not set |
 | docker.service.subnet | no | Allows you to override network-segments docker should use |
+| 
 
 Dependencies
 ------------
@@ -66,3 +67,9 @@ License
 MIT License
 
 See [LICENSE](./LICENSE) for the full text.
+
+Useful Resources
+----------------
+Not really needed for this role but
+- [this guide](https://docs.docker.com/reference/cli/docker/container/run/#env) was really useful for configuring containers
+
