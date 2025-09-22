@@ -75,6 +75,13 @@
     name: "podman,podman-compose,containers-common" #TODO: removed @container-tools, does not exist?
     state: "absent"
 
+- name: "Update package-cache on Debian-based systems"
+  changed_when: no
+  become: yes
+  package:
+    update_cache: yes
+  when: "ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'"
+
 - name: "Install packages."
   package:
     name: "{{ docker.packages }}"
