@@ -26,6 +26,7 @@
 
 - name: "Enable CRB-repository for RHEL-based operating systems"
   become: yes
+  changed_when: no # Always changed because it's a shell-command
   shell:
     cmd: "/usr/bin/crb enable"
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
@@ -96,7 +97,7 @@
   become: yes
   notify: "Restart docker"
 
-- name: "Add user {{ docker_user }} to the docker-group"
+- name: "Add user '{{ docker_user }}' to the docker-group"
   user:
     name: "{{ docker_user }}"
     create_home: yes
@@ -105,6 +106,7 @@
   become: yes
 
 - name: "Create a docker data-directory in '{{ docker_user }}'s home-directory"
+  when: no # Disabled as sub-roles may store data anywhere
   file:
     path: "/home/{{ docker_user }}/docker-data"
     state: directory
@@ -112,14 +114,7 @@
     mode: "0755"
   become: yes
 
-- name: "Enable the docker service"
-  service:
-    name: "{{ docker.service.name }}"
-    enabled: yes
-    state: "started"
-  become: yes
-
-- name: "Enable the docker service"
+- name: "Enable the 'docker'-service"
   service:
     name: "{{ docker.service.name }}"
     enabled: yes
