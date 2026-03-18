@@ -11,6 +11,7 @@ docker:
   - "docker-ce-cli"
   - "containerd.io"
   #- "python3-docker" # Got it's own task because of availability on newer RHEL-distros
+  - "python3-requests"
   - "docker-compose-plugin"
   - "acl" # Needed by ansible
   service:
