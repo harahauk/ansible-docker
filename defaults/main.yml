@@ -10,7 +10,7 @@ docker:
   - "docker-ce"
   - "docker-ce-cli"
   - "containerd.io"
-  - "python3-docker"
+  #- "python3-docker" # Got it's own task because of availability on newer RHEL-distros
   - "docker-compose-plugin"
   - "acl" # Needed by ansible
   service:
