@@ -2,7 +2,7 @@ ansible-docker
 ==============
 ```diff
 # Project maturity (- Dev|@ Staging|+ Prod):
-@ Staging
++ Production
 ```
 
 An [Ansible](https://www.ansible.com/)-role which installs and configures `docker` and `docker-compose` on the target
@@ -37,10 +37,10 @@ ansible-galaxy collection install community.docker     # Only needed if you plan
 
 Role Variables
 --------------
-| Variable    | Mandatory | Description |
-| ----------- | --------- | ----------- |
-| docker_user | no        | Defines a user that you want to given access to docker, defaults to the user running the playbook if not set |
-| docker.service.subnet | no | Allows you to override network-segments docker should use |
+| Variable              | Mandatory | Description |
+| --------------------- | --------- | ----------- |
+| docker_user           | no        | Defines a user that you want to given access to docker, defaults to the user running the playbook if not set |
+| docker.service.subnet | no        | Allows you to override network-segments docker should use |
 
 
 Dependencies
@@ -53,6 +53,7 @@ xor:
   - AlmaLinux 9
   - Fedora 38
 
+
 Example Playbook
 ----------------
 
@@ -62,10 +63,11 @@ Example Playbook
       vars:
         docker_user: "my_unprivileged_user"
 
+
 Author Information
 ------------------
-
 [Harald Hauknes](https://github.com/harahauk)
+
 
 License
 -------
@@ -73,9 +75,3 @@ License
 MIT License
 
 See [LICENSE](./LICENSE) for the full text.
-
-Useful Resources
-----------------
-Not really needed for this role but
-- [this guide](https://docs.docker.com/reference/cli/docker/container/run/#env) was really useful for configuring containers
-

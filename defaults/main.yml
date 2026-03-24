@@ -1,7 +1,7 @@
 ---
 # defaults file for docker
 
-# docker_user should be overridden
+# docker_user should be defined by executing playbook
 docker_user: "{{ ansible_user_id }}"
 docker_datadir : "docker-data"
 
@@ -10,7 +10,8 @@ docker:
   - "docker-ce"
   - "docker-ce-cli"
   - "containerd.io"
-  - "python3-docker"
+  #- "python3-docker" # Got it's own task because of availability on newer RHEL-distros
+  - "python3-requests"
   - "docker-compose-plugin"
   - "acl" # Needed by ansible
   service:
