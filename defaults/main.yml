@@ -1,7 +1,7 @@
 ---
 # defaults file for docker
 
-# docker_user should be overridden
+# docker_user should be defined by executing playbook
 docker_user: "{{ ansible_user_id }}"
 docker_datadir : "docker-data"
 

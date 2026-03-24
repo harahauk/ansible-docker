@@ -3,7 +3,7 @@
 
 ## Repo setups
 - name: "Add docker-CE repo for RHEL-based OS"
-  become: yes
+  become: true
   yum_repository:
     #NOTE: Alternatively download "https://download.docker.com/linux/rhel/docker-ce.repo"
     baseurl: "https://download.docker.com/linux/rhel/$releasever/$basearch/stable"
@@ -16,112 +16,112 @@
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install EPEL for RHEL-based operating systems"
-  become: yes
+  become: true
   dnf:
     name: "epel-release"
     state: "present"
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Enable CRB-repository for RHEL-based operating systems"
-  become: yes
-  changed_when: no # Always changed because it's a shell-command
+  #TODO: When not crb in stat.somefile
+  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
+  become: true
+  changed_when: false # Always changed because it's a shell-command
   shell:
     cmd: "/usr/bin/crb enable"
-  when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
-  #TODO: When not crb in stat.somefile
 
 - name: "Add Docker GPG key in Debian keychain"
+  become: true
+  when: "ansible_distribution == 'Debian'"
   apt_key:
     url: "https://download.docker.com/linux/debian/gpg"
     state: present
-  become: yes
-  when: "ansible_distribution == 'Debian'"
 
 - name: "Add Docker GPG key in Ubuntu keychain"
+  when: "ansible_distribution == 'Ubuntu'"
+  become: true
   apt_key:
     url: "https://download.docker.com/linux/ubuntu/gpg"
     state: present
-  become: yes
-  when: "ansible_distribution == 'Ubuntu'"
 
 - name: "Add docker-CE repo for Debian-based OS"
+  when: "ansible_distribution == 'Debian'"
+  become: true
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_lsb.codename }} stable"
     state: present
-  become: yes
-  when: "ansible_distribution == 'Debian'"
 
 - name: "Add docker-CE repo for Ubuntu-based OS"
+  become: true
+  when: "ansible_distribution == 'Ubuntu'"
   apt_repository:
     repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
     state: present
-  become: yes
-  when: "ansible_distribution == 'Ubuntu'"
 
 # Remove this if issues with podman
 # dnf remove @container-tools
 - name: "Make sure podman is not installed"
-  when: no # Pending debug
+  when: false # Pending debug
+  become: true
+  ignore_errors: true
   package:
     name: "@container-tools"
     state: "absent"
-  become: yes
-  ignore_errors: yes
 
-- name: "Make sure podman is not installed to interfere with docker"
-  become: yes
+- name: "Make sure 'podman' is not installed to interfere with 'docker'"
+  become: true
   package:
     name: "podman,podman-compose,containers-common" #TODO: removed @container-tools, does not exist?
     state: "absent"
 
 - name: "Update package-cache on Debian-based systems"
-  changed_when: no
-  become: yes
+  when: "ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'"
+  changed_when: false
+  become: true
   package:
     update_cache: yes
-  when: "ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'"
 
 - name: "Install packages"
+  become: true
   package:
     name: "{{ docker.packages }}"
     state: "present"
     update_cache: yes
-  become: yes
 
 - name: "Install python3-docker if available, ignore if not" # Unavailable in RHEL10+
-  become: yes
-  ignore_errors: yes
+  become: true
+  ignore_errors: true
   package:
     name: "python3-docker"
     state: "present"
 
 - name: "Render the daemon config-file"
+  notify: "Restart docker"
+  become: true
   template:
     src: "daemon.json.j2"
     dest: "/etc/docker/daemon.json"
-  become: yes
-  notify: "Restart docker"
 
 - name: "Add user '{{ docker_user }}' to the docker-group"
+  become: true
   user:
     name: "{{ docker_user }}"
     create_home: yes
     groups: "docker"
     append: yes
-  become: yes
 
 - name: "Create a docker data-directory in '{{ docker_user }}'s home-directory"
-  when: no # Disabled as sub-roles may store data anywhere
+  become: true
+  when: false # Disabled as sub-roles may store data anywhere
   file:
     path: "/home/{{ docker_user }}/docker-data"
     state: directory
     owner: "{{ docker_user }}"
     mode: "0755"
-  become: yes
 
 - name: "Enable the 'docker'-service"
+  become: true
   service:
     name: "{{ docker.service.name }}"
     enabled: yes
     state: "started"
-  become: yes
