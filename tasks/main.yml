@@ -1,7 +1,6 @@
 ---
 # tasks file for docker
 
-## Repo setups
 - name: "Add docker-CE repo for RHEL-based OS"
   become: true
   yum_repository:
@@ -11,8 +10,8 @@
     file: "docker-ce"
     name: "docker-ce-stable"
     gpgkey: "https://download.docker.com/linux/rhel/gpg"
-    gpgcheck: yes
-    enabled: yes
+    gpgcheck: true
+    enabled: true
   when: "(ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')"
 
 - name: "Install EPEL for RHEL-based operating systems"
@@ -66,13 +65,16 @@
   ignore_errors: true
   package:
     name: "@container-tools"
-    state: "absent"
+    state: absent
 
 - name: "Make sure 'podman' is not installed to interfere with 'docker'"
   become: true
   package:
-    name: "podman,podman-compose,containers-common" #TODO: removed @container-tools, does not exist?
-    state: "absent"
+    state: absent
+    name:
+      - "podman"
+      - "podman-compose"
+      - "containers-common" #TODO: removed @container-tools, does not exist?
 
 - name: "Update package-cache on Debian-based systems"
   when: "ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'"
@@ -86,14 +88,14 @@
   package:
     name: "{{ docker.packages }}"
     state: "present"
-    update_cache: yes
+    update_cache: true
 
-- name: "Install python3-docker if available, ignore if not" # Unavailable in RHEL10+
+- name: "Install python3-docker if available, ignore if not" # Unavailable in RHEL10+, but the library seems included in those cases
   become: true
   ignore_errors: true
   package:
     name: "python3-docker"
-    state: "present"
+    state: present
 
 - name: "Render the daemon config-file"
   notify: "Restart docker"
@@ -111,8 +113,8 @@
     append: yes
 
 - name: "Create a docker data-directory in '{{ docker_user }}'s home-directory"
+  when: false # Disabled, leaving this to more specific roles
   become: true
-  when: false # Disabled as sub-roles may store data anywhere
   file:
     path: "/home/{{ docker_user }}/docker-data"
     state: directory
@@ -123,5 +125,5 @@
   become: true
   service:
     name: "{{ docker.service.name }}"
-    enabled: yes
-    state: "started"
+    enabled: true
+    state: started
