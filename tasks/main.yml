@@ -121,6 +121,20 @@
     owner: "{{ docker_user }}"
     mode: "0755"
 
+- name: "If installing inside an lxc-container, install 'fuse-overlayfs' as well (RHEL-based)"
+  when: ansible_virtualization_type == 'lxc' and (ansible_os_family == 'RedHat') or (ansible_os_family == 'Rocky')
+  become: true
+  dnf:
+    name: "fuse-overlayfs"
+    state: present
+
+- name: "If installing inside an lxc-container, install 'fuse-overlayfs' as well (Debian-based)"
+  when: ansible_virtualization_type == 'lxc' and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian')
+  become: true
+  apt:
+    name: "fuse-overlayfs"
+    state: present
+
 - name: "Enable the 'docker'-service"
   become: true
   service:
